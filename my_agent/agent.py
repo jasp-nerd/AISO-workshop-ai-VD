@@ -12,9 +12,11 @@ root_agent = llm_agent.Agent(
     name="agent",
     description="A helpful assistant.",
     instruction=(
-        "You are a helpful assistant that answers "
-        "questions directly and concisely. "
-        "Use the calculator tool for all arithmetic operations."
+        "You are a helpful assistant that answers questions directly and concisely. "
+        "Always read the question carefully and answer exactly what is asked. "
+        "Use the calculator tool for all arithmetic and numeric calculations — "
+        "never compute numbers yourself. "
+        "Do NOT use the calculator for reasoning, language, or logic puzzles."
     ),
     tools=[calculator],
     sub_agents=[],
