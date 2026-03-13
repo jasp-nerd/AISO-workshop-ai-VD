@@ -14,6 +14,7 @@ def calculator(operation: str, a: float, b: float) -> str:
             "divide"     — a / b
             "power"      — a raised to the power of b (e.g. 2^47: a=2, b=47)
             "sqrt"       — square root of a (pass b=0)
+            "modulo"     — a % b
         a: The first number (or the only number for "sqrt").
         b: The second number (pass 0 when using "sqrt").
 
@@ -21,20 +22,25 @@ def calculator(operation: str, a: float, b: float) -> str:
         The numeric result as a string, or an error message.
     """
     if operation == "add":
-        return str(a + b)
+        result = a + b
     elif operation == "subtract":
-        return str(a - b)
+        result = a - b
     elif operation == "multiply":
-        return str(a * b)
+        result = a * b
     elif operation == "divide":
         if b == 0:
-            return "Error: division by zero"
-        return str(a / b)
+            return "Error: Division by zero."
+        result = a / b
     elif operation == "power":
-        return str(a ** b)
+        result = a ** b
     elif operation == "sqrt":
         if a < 0:
             return "Error: square root of a negative number"
-        return str(math.sqrt(a))
+        result = math.sqrt(a)
+    elif operation == "modulo":
+        if b == 0:
+            return "Error: Division by zero."
+        result = a % b
     else:
-        return f"Error: unknown operation '{operation}'. Use add, subtract, multiply, divide, power, or sqrt."
+        return f"Error: Unknown operation '{operation}'. Use add, subtract, multiply, divide, power, sqrt, or modulo."
+    return str(result)
