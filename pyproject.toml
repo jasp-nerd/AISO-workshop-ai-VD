@@ -14,4 +14,6 @@ dependencies = [
     "PyMuPDF",
     "beautifulsoup4>=4.14.3",
     "ddgs",
+    "stockfish>=4.0.8",
+    "python-chess>=1.999",
 ]

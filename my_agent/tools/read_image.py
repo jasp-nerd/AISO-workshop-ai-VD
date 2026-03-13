@@ -36,7 +36,7 @@ def read_image(file_path: str, question: str) -> str:
 
     client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-pro-preview",
         contents=[
             image_part,
             f"Analyze this image carefully and answer the following question. "

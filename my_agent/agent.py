@@ -7,7 +7,14 @@ from google.adk.agents import llm_agent
 from google.adk.planners import BuiltInPlanner
 from google.genai.types import GenerateContentConfig, ThinkingConfig
 
-from my_agent.tools import calculator, fetch_webpage, read_image, read_pdf, web_search
+from my_agent.tools import (
+    calculator,
+    chess_best_move,
+    fetch_webpage,
+    read_image,
+    read_pdf,
+    web_search,
+)
 
 root_agent = llm_agent.Agent(
     model="gemini-3.1-pro-preview",
@@ -29,25 +36,32 @@ root_agent = llm_agent.Agent(
         "your query and try again with different keywords. Limit yourself to at most 3 search attempts.\n"
         "4. FETCH_WEBPAGE: Use after web_search to read the full page content of a promising URL. "
         "If a question provides a URL directly, fetch it immediately without searching first. "
-        "If the first page doesn't have the answer, try another URL from search results.\n"
+        "For large pages like changelogs, use the search_term parameter to extract only "
+        "relevant sections (e.g. search_term='bug fix' for bug fix questions).\n"
         "5. READ_IMAGE: When a question references an image file (.png, .jpg, etc.), "
         "use read_image with the file path and a detailed question about what you need "
         "to extract from the image. Be very specific in your question — describe exactly "
-        "what data, numbers, text, or visual details you need from the image.\n\n"
+        "what data, numbers, text, or visual details you need from the image.\n"
+        "6. CHESS_BEST_MOVE: When you need to find the best chess move for a position, "
+        "first use read_image to extract the position as a FEN string. In your read_image "
+        "prompt, ask the model to carefully describe each rank from rank 8 (top) to rank 1 "
+        "(bottom), identifying each piece (K=king, Q=queen, R=rook, B=bishop, N=knight, "
+        "P=pawn; uppercase=White, lowercase=black). Pay attention to the board orientation. "
+        "Then pass the FEN to chess_best_move to get the engine's best move.\n\n"
         "IMPORTANT STRATEGIES:\n"
         "- For DOI lookups: search for the DOI to find the book/paper, then fetch the relevant page.\n"
-        "- For changelog/version history questions: fetch the URL directly if provided, "
-        "then carefully scan the full page for the specific item mentioned.\n"
+        "- For changelog/version history questions: fetch the URL directly if provided. "
+        "Use the search_term parameter of fetch_webpage to focus on the relevant section.\n"
         "- When a question asks about reports/documents that might be PDFs online, "
         "try to find and download the PDF using read_pdf with the URL.\n"
-        "- Keep web search chains short. Do not make more than 7 total tool calls.\n\n"
+        "- Keep tool call chains short. Do not make more than 10 total tool calls.\n\n"
         "ANSWERING:\n"
         "- Give ONLY the final answer in the most concise form possible.\n"
         "- If the question asks for a number, respond with just the number.\n"
         "- If it asks for a name, respond with just the name.\n"
         "- Do NOT include explanations, reasoning, or extra text in your final answer."
     ),
-    tools=[calculator, read_pdf, read_image, web_search, fetch_webpage],
+    tools=[calculator, read_pdf, read_image, web_search, fetch_webpage, chess_best_move],
     generate_content_config=GenerateContentConfig(
         temperature=0.1,
     ),

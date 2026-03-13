@@ -175,7 +175,7 @@ class ADKAgentRunner:
                         "parts": message_parts,
                     },
                 },
-                timeout=120,
+                timeout=300,
             )
             response.raise_for_status()
             events = response.json()

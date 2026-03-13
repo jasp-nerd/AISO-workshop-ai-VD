@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def fetch_webpage(url: str) -> str:
+def fetch_webpage(url: str, search_term: str = "") -> str:
     """Fetch a webpage and return its text content.
 
     Use this tool to read the full content of a specific URL. Call it:
@@ -15,6 +15,10 @@ def fetch_webpage(url: str) -> str:
 
     Args:
         url: The full URL of the webpage to fetch.
+        search_term: Optional keyword to focus extraction on. If provided, only
+            sections of the page containing this term (with surrounding context)
+            will be returned. Use this for very large pages like changelogs or
+            documentation where you only need a specific section.
 
     Returns:
         The extracted text content of the webpage.
@@ -48,7 +52,24 @@ def fetch_webpage(url: str) -> str:
     # Collapse multiple blank lines
     text = re.sub(r"\n{3,}", "\n\n", text)
 
-    # Generous truncation — 20k chars to capture detailed pages
+    # If a search term is provided, extract only relevant sections
+    if search_term:
+        term_lower = search_term.lower()
+        lines = text.split("\n")
+        relevant_chunks = []
+        for i, line in enumerate(lines):
+            if term_lower in line.lower():
+                # Grab surrounding context (30 lines before and after)
+                start = max(0, i - 30)
+                end = min(len(lines), i + 31)
+                chunk = "\n".join(lines[start:end])
+                relevant_chunks.append(chunk)
+        if relevant_chunks:
+            # Deduplicate overlapping chunks
+            text = "\n\n---\n\n".join(relevant_chunks)
+        # If search_term not found, fall through to return full text
+
+    # Truncate to avoid overwhelming the agent
     if len(text) > 20000:
         text = text[:20000] + "\n\n[Content truncated at 20000 characters...]"
     return text
