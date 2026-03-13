@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def fetch_webpage(url: str, search_term: str = "") -> str:
+def fetch_webpage(url: str, search_term: str) -> str:
     """Fetch a webpage and return its text content.
 
     Use this tool to read the full content of a specific URL. Call it:
@@ -15,10 +15,10 @@ def fetch_webpage(url: str, search_term: str = "") -> str:
 
     Args:
         url: The full URL of the webpage to fetch.
-        search_term: Optional keyword to focus extraction on. If provided, only
-            sections of the page containing this term (with surrounding context)
-            will be returned. Use this for very large pages like changelogs or
-            documentation where you only need a specific section.
+        search_term: Keyword to focus extraction on. Pass "" to get the full page.
+            If non-empty, only sections containing this term (with surrounding
+            context) will be returned. Use this for large pages like changelogs
+            where you only need a specific section.
 
     Returns:
         The extracted text content of the webpage.
