@@ -14,6 +14,8 @@ dependencies = [
     "PyMuPDF",
     "beautifulsoup4>=4.14.3",
     "ddgs",
-    "stockfish>=4.0.8",
     "python-chess>=1.999",
+    "board-to-fen>=0.1.1",
+    "tensorflow>=2.20",
+    "tf-keras>=2.20",
 ]
